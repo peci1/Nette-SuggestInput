@@ -1,0 +1,8 @@
+License of the SuggestInput:
+
+The jQuery, jQuery.dimensions and jQuery.bgiframe have their own licenses
+
+I mostly like BSD, but you can do everything you want with this 
+library (except the above mentioned files) except of removing my name and the 
+download link from the file (espacially you CAN use it free of charge in 
+commercial applications) 

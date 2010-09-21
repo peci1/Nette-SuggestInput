@@ -1,0 +1,91 @@
+SUGGEST INPUT NETTE TUTORIÁL
+============================
+Tento tutoriál je pro uživatele Nette frameworku, ostatní si jej musí přetvořit
+dle svých potřeb
+
+
+
+INSTALACE
+=========
+Zkopírujte následující soubory do svého projektu
+
+Seznam souborů:
+ * /docs - tato nápověda :) a další soubory s nápovědou - ty kopírovat 
+ *         nemusíte
+ * /app
+ *      /libs       //Tuto složku můžete nakopírovat kamkoli do projektu
+ *          /SuggestInput
+ *              SuggestInput.php
+ *              license.txt
+ *              /Suggesters
+ *                  ISuggester.php
+ *                  ArraySuggester.php
+ *                  DibiSuggester.php
+ *                  ConstantSuggester.php
+ *      /presenters
+ *          SuggesterTestPresenter.php
+ *      /templates
+ *          /SuggesterTest
+ *              default.phtml
+ * /document_root
+ *      /js
+ *          jquery.suggest.js
+ *          jquery.dimensions.js
+ *          jquery.bgiframe.min.js
+ *      /css
+ *          suggest.css
+
+Pokud nepoužíváte RobotLoader, musíte ve svém programu includnout 
+SuggestInput.php
+
+Nezapomeňte zavolat
+Form::extensionMethod('Form::addSuggestInput', 'SuggestInput::addSuggestInput');
+z Vašeho bootstrap.php nebo BasePresenter::__construct()
+
+Includněte následující JS knihovny do layoutu stránky:
+ *  jQuery
+ *  jQuery.dimensions (included in package)
+ *  jQuery.bgiframe.min (included in package)
+ *  jQuery.suggest 1.2 (included in package)
+A includněte do layoutu ukázkový css soubor
+ * suggest.css
+
+
+
+POUŽITÍ SUGGEST INPUTU
+======================
+Budete potřebovat akci nějakého presenteru, která vrací navrhované položky jako
+PHP pole zakódované pomocí JSON (položky jsou načítány pomocí AJAX (nebo, 
+přesněji, AJAJ - Asynchonous Javascript And JSON))
+
+V akci budete potřebovat suggester (navrhovač) - objekt, který v jakési 
+"černé skříňce" najde odpovídající položky.
+Stejný suggester byste měli použít jak v action tak při předávání suggestInputu
+(pokud mu suggester potřebujete předat).
+ou need to give one).
+
+Můžete se vybrat ze 3 předdefinovaných suggesterů:
+ * ArraySuggester - hledá odpovídající položky v poli, které mu předáte
+ * DibiSuggester - hledá odpovídající položky v databázové tabulce
+    (používá DiBi - dibiphp.com)
+ * ConstantSuggester - vždy vrací ty samé položky (které mu poskytnete v poli)
+Nebo si můžete napsat vlastní suggester, ale ten by měl implementovat ISuggester
+
+
+
+NEJJEDNODUŠŠÍ PŘÍPAD
+=====================
+V nejjednodušším případě pouze zavoláte
+    ->addSuggestInput('unikátníId', 'Popisek', $this->link('navrhni'))
+na Form, který vytváříte.
+
+To předpokládá, že máte akci actionNavrhni(). Tato akce používá nějaký 
+suggester, který můžete vytvářet třeba v továrničce createComponentSuggester().
+
+Více příkladů najdete v ukázkovém presenteru
+
+
+
+ŽIVÉ DEMO
+=========
+Na stránce http://mars.halousek.eu/suggester-test/ můžete vyzkoušet živé demo

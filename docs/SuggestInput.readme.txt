@@ -1,0 +1,90 @@
+SUGGEST INPUT NETTE TUTORIAL
+============================
+This tutorial is for Nette framework users, the others must adjust it for 
+their needs
+
+
+
+INSTALLATION
+============
+Just copy the file tree to your nette project
+
+File list:
+ * /docs - this help :) and other help files - you don't need to copy them
+ * /app
+ *      /libs       //You can copy this libs dir everywhere in your project
+ *          /SuggestInput
+ *              SuggestInput.php
+ *              license.txt
+ *              /Suggesters
+ *                  ISuggester.php
+ *                  ArraySuggester.php
+ *                  DibiSuggester.php
+ *                  ConstantSuggester.php
+ *      /presenters
+ *          SuggesterTestPresenter.php
+ *      /templates
+ *          /SuggesterTest
+ *              default.phtml
+ * /document_root
+ *      /js
+ *          jquery.suggest.js
+ *          jquery.dimensions.js
+ *          jquery.bgiframe.min.js
+ *      /css
+ *          suggest.css
+
+If you do not use RobotLoader, you need to include SuggestInput.php to your 
+program. 
+
+Don't forget to call 
+Form::extensionMethod('Form::addSuggestInput', 'SuggestInput::addSuggestInput');
+from your bootstrap or BasePresenter::__construct()
+
+Include the following JS libraries in the page layout:
+ *  jQuery
+ *  jQuery.dimensions (included in package)
+ *  jQuery.bgiframe.min (included in package)
+ *  jQuery.suggest 1.2 (included in package)
+And include the sample css file in the page layout
+ * suggest.css
+
+
+
+USING SUGGEST INPUT
+===================
+You will need a presenter's action returning the suggested items as JSON array
+(they are loaded via AJAX (or, better AJAJ - Asynchonous Javascript And JSON))
+
+So you will need a suggester object - the object that searches some "blackbox"
+and returns the matching items.
+The same suggester should be used in the action
+and should be given to the control (if you need to give one).
+
+You can choose from 3 predefined suggesters:
+ * ArraySuggester - you provide an array of items and the suggester searches
+    the array for matching items
+ * DibiSuggester - searches a database table for matching items 
+    (uses DiBi - dibiphp.com)
+ * ConstantSuggester - always suggests the same items (provided as array)
+Or you can write your own suggester, but then please implement ISuggester
+
+
+
+THE SIMPLEST CASE
+=================
+In the simplest case you just call
+    ->addSuggestInput('uniqueId', 'Label', $this->link('suggest'))
+on a Form you create.
+
+This supposes you create an action called actionSuggest(). The action uses
+a suggester, which you can create in the component factory 
+createComponentSuggester().
+
+See the example presenter for more examples
+
+
+
+LIVE DEMO
+=========
+You can try out a live demo at http://mars.halousek.eu/suggester-test/
