@@ -5,7 +5,7 @@
  * 
  * @uses BasePresenter
  * @package SugggestInput
- * @version 1.0.0
+ * @version 1.1.0
  * @copyright (c) 2009 Martin Pecka (Clevis)
  * @author Martin Pecka <martin.pecka@clevis.cz> 
  * @license I mostly like BSD, but you can do everything you want with this 
@@ -67,6 +67,14 @@ class SuggesterTestPresenter extends BasePresenter
         //dibi suggester - suggest from a database table
         $form->addSuggestInput('suggest4', "DibiSuggester")
             ->setSuggestLink($this->link('suggestDibi'));
+
+        $form->addSuggestInput('suggest5', 'Retrieving data through a signal')
+            ->setSuggestLink($this->link('signalSuggest!'))
+            ->addJsOptions('itemsPerPage', 10)
+            ->addJsOptions('noControl', true)
+            ->addJsOptions('minchars', 0)
+            ->addJsOptions('constant', true)
+            ->addJsOptions('componentName', $this->getName()); //important when using signals
 
 
 
@@ -142,6 +150,19 @@ class SuggesterTestPresenter extends BasePresenter
      */
     public function renderSuggestDibi()
     {
+        $this->terminate(new JsonResponse($this->matches));
+    }
+
+    /**
+     * Set matching items to the constant items of the suggester
+     * 
+     * @param string $typedText Unused here
+     *
+     * @return void
+     */
+    public function handleSignalSuggest($typedText = '')
+    {        
+        $this->matches = $this['constantSuggester']->getSuggestions(NULL);
         $this->terminate(new JsonResponse($this->matches));
     }
 

@@ -84,8 +84,6 @@ class DibiSuggester extends /*Nette\*/Component implements ISuggester
         if (!$wholeQuery && !$this->matchToEnd())
             $query .= '%';
 
-        dibi::connect(Environment::getConfig('database'));
-
         $matches = dibi::select($this->column)
             ->from($this->table)
             ->where($this->where, $query)

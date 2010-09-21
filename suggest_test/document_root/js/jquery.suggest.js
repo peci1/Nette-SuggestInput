@@ -1,6 +1,6 @@
 /*
  *	jquery.suggest 1.3 - 2010-09-21
- *	Download the newest version from http://www.kcjitka.cz/data/suggestInput.zip
+ *	Download the newest version from http://github.com/peci1/Nette-SuggestInput/blob/master/SuggestInput.zip
  *
  *	JavaScript&JQuery side of support of text input suggesting some items
  *	

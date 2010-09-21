@@ -14,13 +14,13 @@ include_once dirname(__FILE__) . '/Suggesters/DibiSuggester.php';
  *  jQuery.dimensions (included in package) http://plugins.jquery.com/project/dimensions
  *  jQuery.bgiframe.min (included in package) http://plugins.jquery.com/node/46/release
  * INTERNAL
- *  jQuery.suggest 1.2 (included in package) http://www.kcjitka.cz/data/suggestInput.zip
+ *  jQuery.suggest 1.3 (included in package) http://www.kcjitka.cz/data/suggestInput.zip
  *
  * The css file provided with this package is supposed to be loaded, but you
  * can create your own
  *
  * @package Nette\Forms
- * @version 1.0.0
+ * @version 1.1.0
  * @copyright (c) 2009 Martin Pecka (Clevis)
  * @author Martin Pecka <martin.pecka@clevis.cz> 
  * @license I mostly like BSD, but you can do everything you want with this 
@@ -40,6 +40,7 @@ class /*Nette\Forms\*/SuggestInput extends /*Nette\Forms\*/TextInput
      *  $form->addSuggestInput($name, $label, $suggestLink...);
 
      Form::extensionMethod('Form::addSuggestInput', 'SuggestInput::addSuggestInput');
+     or Form::extensionMethod('addSuggestInput', 'SuggestInput::addSuggestInput'); in PHP 5.3
 
     */
 

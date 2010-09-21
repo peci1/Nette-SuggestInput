@@ -1,6 +1,6 @@
 /*
- *	jquery.suggest 1.2 - 2009-10-15
- *	Download the newest version from http://www.kcjitka.cz/data/suggestInput.zip
+ *	jquery.suggest 1.3 - 2010-09-21
+ *	Download the newest version from http://github.com/peci1/Nette-SuggestInput/blob/master/SuggestInput.zip
  *
  *	JavaScript&JQuery side of support of text input suggesting some items
  *	
@@ -39,6 +39,7 @@
             var prevLength = [];
             var cache = [];
             var cacheSize = [];
+            var componentName = []; //FIX from http://forum.nette.org/cs/viewtopic.php?pid=23031#p23031
 
             var items = [];
 
@@ -256,8 +257,19 @@
 
                     displayItems(loading);
 				
+                    //FIX from http://forum.nette.org/cs/viewtopic.php?pid=23031#p23031
+                    var typedTextCaption = {};
+                    if (options.componentName)
+                        typedTextCaption=options.componentName+"-typedText";
+                    else
+                        typedTextCaption="typedText";
+
+                    var getData = {}
+
+                    getData[typedTextCaption]=typedText;
+
                     //AJAX(J) GET
-					$.get(options.source, {typedText: typedText}, function(response) {
+					$.get(options.source, getData, function(response) {
 
 						$results[id].hide();
                         currentPage[id] = 0;
@@ -451,8 +463,7 @@
 				$results[id].hide();
 				
 				if (options.onSelect)
-					options.onSelect.apply($input[0]);
-					
+					window[options.onSelect].apply($input[0]); //FIX from http://forum.nette.org/cs/2769-suggestinput-aneb-naseptavac?pid=29400#p29400
 			}
 		
 		}

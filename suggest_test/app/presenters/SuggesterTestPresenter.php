@@ -18,6 +18,13 @@ class SuggesterTestPresenter extends BasePresenter
     /** @var array Items matched for current query */
     protected $matches;
 
+    
+    protected function startup()
+    {
+        parent::startup();
+        dibi::connect(Environment::getConfig('database'));
+    }
+
     /**
      * Create the form with some suggest inputs 
      * 
