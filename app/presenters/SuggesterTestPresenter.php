@@ -1,13 +1,16 @@
 <?php
 
+use Nette\Addons\SuggestInput;
+use Nette\Application\UI\Form;
+use Nette\Application\Responses\JsonResponse;
+
 /**
- * Example presenter for testing the suggesting input 
+ * Example presenter for testing the SuggestInput component
  * 
- * @uses BasePresenter
  * @package SugggestInput
- * @version 1.1.0
- * @copyright (c) 2009 Martin Pecka (Clevis)
- * @author Martin Pecka <martin.pecka@clevis.cz> 
+ * @version 2.0
+ * @copyright (c) 2013 Martin Pecka
+ * @author Martin Pecka <peci1@seznam.cz> 
  * @license I mostly like BSD, but you can do everything you want with this 
  * library except of removing my name and the download link from the file 
  * (espacially you CAN use it free of charge in commercial applications)  
@@ -25,13 +28,16 @@ class SuggesterTestPresenter extends BasePresenter
      */
     protected function createComponentTestForm()
     {
-        $form = new AppForm();
+        $form = new Form();
+
+	//to set the default (Javascript) UI language, call the following (L10N strings are in jquery.suggest.js)
+	//Nette\Addons\SuggestInput::$defaultUiLanguage = 'en';
 
         //see further functions' definitions for suggester factories and 
         //action definitions
 
         //the simplest case - suggesting from an array
-        $form->addSuggestInput('suggest1', "Simple ArraySuggester")
+        $form->addSuggestInput('suggest1', "Simple ArraySuggester (try eg. 'ahoj')")
 
             //here is the link to the action that provides suggestions
             ->setSuggestLink($this->link('suggestAhoj'));
@@ -43,16 +49,16 @@ class SuggesterTestPresenter extends BasePresenter
         $form->addSuggestInput('suggest2', "Using ConstantSuggester as tooltip")
             ->setSuggestLink($this->link('suggestConstant'))
 
-            //and this way you set some JS options (defined in jquery.suggest.js)
-            ->addJsOptions('itemsPerPage', 10)
-            ->addJsOptions('noControl', true)
-            ->addJsOptions('minchars', 0)
-            ->addJsOptions('constant', true);
+	    //use this input as constant suggester
+	    ->useAsConstantSuggester()
+
+	    //and this way you set some JS options (defined in jquery.suggest.js)
+	    ->addJsOptions('lang', 'en');
 
 
 
         //checking if the submitted value is one of the suggested ones
-        $form->addSuggestInput('suggest3', "Suggested values check on form send")
+        $form->addSuggestInput('suggest3', "Suggested values check on form send (try eg. 'ahoj')")
             ->setSuggestLink($this->link('suggestAhoj'))
 
             //here is the suggester that is used, only required if you want to use the following validator
@@ -60,20 +66,19 @@ class SuggesterTestPresenter extends BasePresenter
 
             //this validation rule checks if the entered value is one of the suggested items
             //the FALSE at the end means we do not allow empty value as a value
-            ->addRule(SuggestInput::SUGGESTED_ONLY, 'Vybraná možnost musí být jedna z nabízených', FALSE);
+            ->addRule(SuggestInput::SUGGESTED_ONLY, 'Select a value from the suggested list', FALSE);
 
 
 
-        //dibi suggester - suggest from a database table
-        $form->addSuggestInput('suggest4', "DibiSuggester")
-            ->setSuggestLink($this->link('suggestDibi'));
+        //DB suggester - suggest from a database table
+        $form->addSuggestInput('suggest4', "DbSuggester (try eg. 'Milan', 'pet')")
+            ->setSuggestLink($this->link('suggestDb'));
+
+
 
         $form->addSuggestInput('suggest5', 'Retrieving data through a signal')
             ->setSuggestLink($this->link('signalSuggest!'))
-            ->addJsOptions('itemsPerPage', 10)
-            ->addJsOptions('noControl', true)
-            ->addJsOptions('minchars', 0)
-            ->addJsOptions('constant', true)
+            ->useAsConstantSuggester()
             ->addJsOptions('componentName', $this->getName()); //important when using signals
 
 
@@ -106,7 +111,7 @@ class SuggesterTestPresenter extends BasePresenter
      */
     public function renderSuggestAhoj()
     {
-        $this->terminate(new JsonResponse($this->matches));
+        $this->sendResponse(new JsonResponse($this->matches));
     }
 
     /**
@@ -128,7 +133,7 @@ class SuggesterTestPresenter extends BasePresenter
      */
     public function renderSuggestConstant()
     {
-        $this->terminate(new JsonResponse($this->matches));
+        $this->sendResponse(new JsonResponse($this->matches));
     }
 
     /**
@@ -138,9 +143,9 @@ class SuggesterTestPresenter extends BasePresenter
      *
      * @return void
      */
-    public function actionSuggestDibi($typedText = '')
+    public function actionSuggestDb($typedText = '')
     {        
-        $this->matches = $this['dibiSuggester']->getSuggestions($typedText);
+        $this->matches = $this['dbSuggester']->getSuggestions($typedText);
     }
 
     /**
@@ -148,9 +153,9 @@ class SuggesterTestPresenter extends BasePresenter
      * 
      * @return void
      */
-    public function renderSuggestDibi()
+    public function renderSuggestDb()
     {
-        $this->terminate(new JsonResponse($this->matches));
+        $this->sendResponse(new JsonResponse($this->matches));
     }
 
     /**
@@ -162,26 +167,26 @@ class SuggesterTestPresenter extends BasePresenter
      */
     public function handleSignalSuggest($typedText = '')
     {        
-        $this->matches = $this['constantSuggester']->getSuggestions(NULL);
-        $this->terminate(new JsonResponse($this->matches));
+        $matches = $this['constantSuggester']->getSuggestions(NULL);
+        $this->sendResponse(new JsonResponse($matches));
     }
 
     /**
      * Create an example array suggester 
      * 
-     * @return ISuggester
+     * @return Nette\Addons\SuggestInput\ISuggester
      */
     protected function createComponentAhojSuggester()
     {
-        $suggester = new ArraySuggester();
+        $suggester = new Nette\Addons\SuggestInput\ArraySuggester();
 
         $data = array(
-            'ahoj', 'ahojk', 'ahojky', 'bah', 'bahn', 'bahno', 'cíl', 'cíle', 'cílev', 'cílevě', 'cílevěd', 'cílevědo', 'cílevědom', 'cílevědomý', 
-            'ahoj', 'ahojk', 'ahojky', 'bah', 'bahn', 'bahno', 'cíl', 'cíle', 'cílev', 'cílevě', 'cílevěd', 'cílevědo', 'cílevědom', 'cílevědomý', 
-            'ahoj 1', 'ahojk', 'ahojky', 'bah', 'bahn', 'bahno', 'cíl', 'cíle', 'cílev', 'cílevě', 'cílevěd', 'cílevědo', 'cílevědom', 'cílevědomý', 
-            'ahoj 2', 'ahojk', 'ahojky', 'bah', 'bahn', 'bahno', 'cíl', 'cíle', 'cílev', 'cílevě', 'cílevěd', 'cílevědo', 'cílevědom', 'cílevědomý', 
-            'ahoj 3', 'ahojk', 'ahojky', 'bah', 'bahn', 'bahno', 'cíl', 'cíle', 'cílev', 'cílevě', 'cílevěd', 'cílevědo', 'cílevědom', 'cílevědomý', 
-            'ěščřžýáíéúůďťň', 'ĚŠČŘŽÝÁÍÉÚŮĎŤŇ', 'ahoj ahoj', 'hola hou'
+            'ahoj', 'ahojk', 'ahojky', 'bah', 'bahn', 'bahno', 'cíl', 'cíle', 'cílevě', 'cílevě', 'cílevěd', 'cílevědo', 'cílevědomý', 'cílevědomý', 
+            'ahoj', 'ahojk', 'ahojky', 'bah', 'bahn', 'bahno', 'cíl', 'cíle', 'cílevě', 'cílevě', 'cílevěd', 'cílevědo', 'cílevědomý', 'cílevědomý', 
+            'ahoj 1', 'ahojk', 'ahojky', 'bah', 'bahn', 'bahno', 'cíl', 'cíle', 'cílevě', 'cílevě', 'cílevěd', 'cílevědo', 'cílevědomý', 'cílevědomý', 
+            'ahoj 2', 'ahojk', 'ahojky', 'bah', 'bahn', 'bahno', 'cíl', 'cíle', 'cílevě', 'cílevě', 'cílevěd', 'cílevědo', 'cílevědomý', 'cílevědomý', 
+            'ahoj 3', 'ahojk', 'ahojky', 'bah', 'bahn', 'bahno', 'cíl', 'cíle', 'cílevě', 'cílevě', 'cílevěd', 'cílevědo', 'cílevědomý', 'cílevědomý', 
+            'žščřcjďťŇ', 'ŽŠČŘĎŤň', 'ahoj ahoj', 'hola hou'
         );
         $suggester
             ->setItems($data)
@@ -195,29 +200,28 @@ class SuggesterTestPresenter extends BasePresenter
     /**
      * Create an example constant suggester 
      * 
-     * @return ISuggester
+     * @return Nette\Addons\SuggestInput\ISuggester
      */
     protected function createComponentConstantSuggester()
     {
-        $suggester = new ConstantSuggester();
+        $suggester = new Nette\Addons\SuggestInput\ConstantSuggester();
         $data = array('A great tooltip', 'Is on more lines!', 'Type "Expedice Mars 2009" in the last input!');
         return $suggester->setItems($data);
     }
 
     /**
-     * Create an example dibi suggester 
+     * Create an example DB-sourced suggester 
      * 
-     * @return void
+     * @return Nette\Addons\SuggestInput\ISuggester
      */
-    protected function createComponentDibiSuggester()
+    protected function createComponentDbSuggester()
     {
-        $suggester = new DibiSuggester();
+        $suggester = new Nette\Addons\SuggestInput\DbSuggester($this->getService('database'));
         return $suggester
-            ->setTable('suggestions')
-            ->setColumn('text')
-            ->setWhere('[text] LIKE %s');
+            ->setTable('organizers')
+            ->setColumn('name')
+            ->setWhere('`name` LIKE ?');
     }
-
 }
 
 /* ?> omitted intentionally */
