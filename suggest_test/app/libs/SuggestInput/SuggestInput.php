@@ -11,7 +11,7 @@ include_once dirname(__FILE__) . '/Suggesters/DibiSuggester.php';
  * Needs following Javascript libraries to be loaded:
  * THIRD-PARTY - mostly GPL || MIT licensed
  *  jQuery http://jquery.com
- *  jQuery.dimensions (included in package) http://plugins.jquery.com/project/dimensions
+ *  jQuery.dimensions (included in package; only for jQuery <1.8) http://plugins.jquery.com/project/dimensions
  *  jQuery.bgiframe.min (included in package) http://plugins.jquery.com/node/46/release
  * INTERNAL
  *  jQuery.suggest 1.3 (included in package) http://www.kcjitka.cz/data/suggestInput.zip
@@ -20,9 +20,9 @@ include_once dirname(__FILE__) . '/Suggesters/DibiSuggester.php';
  * can create your own
  *
  * @package Nette\Forms
- * @version 1.1.0
- * @copyright (c) 2009 Martin Pecka (Clevis)
- * @author Martin Pecka <martin.pecka@clevis.cz> 
+ * @version 1.1.1
+ * @copyright (c) 2013 Martin Pecka
+ * @author Martin Pecka <peci1@seznam.cz> 
  * @license I mostly like BSD, but you can do everything you want with this 
  * library except of removing my name and the download link from the file 
  * (espacially you CAN use it free of charge in commercial applications) 

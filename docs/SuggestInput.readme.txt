@@ -44,8 +44,8 @@ from your bootstrap or BasePresenter::__construct()
 Include the following JS libraries in the page layout:
  *  jQuery
  *  jQuery.dimensions (included in package)
- *  jQuery.bgiframe.min (included in package)
- *  jQuery.suggest 1.2 (included in package)
+ *  jQuery.bgiframe.min (included in package; only for jQuery <1.8)
+ *  jQuery.suggest 1.3 (included in package)
 And include the sample css file in the page layout
  * suggest.css
 

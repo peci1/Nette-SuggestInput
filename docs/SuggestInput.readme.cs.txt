@@ -45,8 +45,8 @@ z Vašeho bootstrap.php nebo BasePresenter::__construct()
 Includněte následující JS knihovny do layoutu stránky:
  *  jQuery
  *  jQuery.dimensions (included in package)
- *  jQuery.bgiframe.min (included in package)
- *  jQuery.suggest 1.2 (included in package)
+ *  jQuery.bgiframe.min (included in package; only for jQuery <1.8)
+ *  jQuery.suggest 1.3 (included in package)
 A includněte do layoutu ukázkový css soubor
  * suggest.css
 
