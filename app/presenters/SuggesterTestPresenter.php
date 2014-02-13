@@ -209,14 +209,20 @@ class SuggesterTestPresenter extends BasePresenter
         return $suggester->setItems($data);
     }
 
+    private $dbConnection;
+    public function injectDbConnection(\Nette\Database\Context $connection)
+    {
+        $this->dbConnection = $connection;
+    }
+
     /**
-     * Create an example DB-sourced suggester 
-     * 
+     * Create an example DB-sourced suggester
+     *
      * @return Nette\Addons\SuggestInput\ISuggester
      */
     protected function createComponentDbSuggester()
     {
-        $suggester = new Nette\Addons\SuggestInput\DbSuggester($this->getService('database'));
+        $suggester = new Nette\Addons\SuggestInput\DbSuggester($this->dbConnection);
         return $suggester
             ->setTable('organizers')
             ->setColumn('name')

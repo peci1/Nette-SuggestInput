@@ -24,7 +24,7 @@ namespace Nette\Addons\SuggestInput;
 class DbSuggester extends \Nette\ComponentModel\Component implements ISuggester
 {
 
-    /** @var Nette\Database\Connection The DB connection */
+    /** @var Nette\Database\Context The DB connection */
     protected $connection = NULL;
 
     /** @var string Name of the table we fetch suggestions from  */
@@ -49,14 +49,14 @@ class DbSuggester extends \Nette\ComponentModel\Component implements ISuggester
     /**
      * Just set member variables from arguments 
      * 
-     * @param Nette\Database\Connection $connection The DB connection.
+     * @param Nette\Database\Context $connection The DB connection.
      * @param string $table Name of the table we fetch suggestions from
      * @param string $column Name of the column we fetch suggestions from
      * @param string $where The WHERE clause (without WHERE), place %s in the place
      *                      of the query string (do not type ' or " around it!)
      * @return void
      */
-    public function __construct(\Nette\Database\Connection $connection = NULL, $table = NULL, $column = NULL, $where = NULL)
+    public function __construct(\Nette\Database\Context $connection = NULL, $table = NULL, $column = NULL, $where = NULL)
     {
 	$this->setConnection($connection);
         $this->setTable($table);
@@ -158,7 +158,7 @@ class DbSuggester extends \Nette\ComponentModel\Component implements ISuggester
     /**
      * Returns the DB connection.
      * 
-     * @return Nette\Database\Connection The connection.
+     * @return Nette\Database\Context The connection.
      */
     public function getConnection()
     {
@@ -168,10 +168,10 @@ class DbSuggester extends \Nette\ComponentModel\Component implements ISuggester
     /**
      * Sets the DB connection.
      * 
-     * @param Nette\Database\Connection $value The new DB connection
+     * @param Nette\Database\Context $value The new DB connection
      * @return ISuggester Provides fluent interface
      */
-    public function setConnection(\Nette\Database\Connection $value)
+    public function setConnection(\Nette\Database\Context $value)
     {
         $this->connection = $value;
         return $this;
