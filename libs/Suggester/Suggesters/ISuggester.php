@@ -6,7 +6,7 @@ namespace Nette\Addons\SuggestInput;
  * A model that can return items from a list matching a given pattern
  * 
  * @package Nette\Addons\SuggestInput
- * @version 2.0
+ * @version 2.1
  * @copyright (c) 2013 Martin Pecka
  * @author Martin Pecka <peci1@seznam.cz> 
  * @license I mostly like BSD, but you can do everything you want with this 

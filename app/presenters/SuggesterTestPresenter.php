@@ -8,7 +8,7 @@ use Nette\Application\Responses\JsonResponse;
  * Example presenter for testing the SuggestInput component
  * 
  * @package SugggestInput
- * @version 2.0
+ * @version 2.1
  * @copyright (c) 2013 Martin Pecka
  * @author Martin Pecka <peci1@seznam.cz> 
  * @license I mostly like BSD, but you can do everything you want with this 
