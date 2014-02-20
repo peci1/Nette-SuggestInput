@@ -84,7 +84,12 @@
 		currentItem[id] = 0;		//index of currently selected item (can be inaccurate)
 			
 		$results[id].addClass(options.resultsClass).appendTo('body');
-		
+
+        idField = null;
+        if (options.idField !== null) {
+            idField = options.idField;
+        }
+
 		resetPosition();
 		$(window)
 			.load(resetPosition)		// just in case user is changing size of page while loading
@@ -131,6 +136,7 @@
 		 * @return void
 		 */
 		function processKey(e) {
+
 			e = e || window.event;
 			var keyCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
 
@@ -356,7 +362,7 @@
 				liClass = "active";
 			
 			for (var i = firstItem; i <= lastItem; i++)
-				html += '<li class="' + liClass + '">' + it[i] + '</li>';
+				html += '<li class="' + liClass + '" data-idValue="'+it[i].id+'">' + it[i].value + '</li>';
 			
 			//if we have more items than we want to be on a single page, 
 			//display the paging toolbar
@@ -397,24 +403,24 @@
 		 *
 		 * return array
 		 */
-		function parseResponse(response, typedText) {			
-			var items = [];
+		function parseResponse(response, typedText) {
+            var items = [];
 			//response is in JSON; if you prefer other format, you can modify this
 			var tokens = eval(response);
-		
-			// parse returned data for non-empty items
+
+		    // parse returned data for non-empty items
 			for (var i in tokens) {
-				var token = $.trim(tokens[i]);
+				//var token = $.trim(tokens[i]);
+                var token = eval(tokens[i]);
 				if (token) {
 					//perform highlighting of the matched part
-					token = token.replace(
+					token.value = token.value.replace(
 						new RegExp(typedText, 'ig'), 
 						function(typedText) { return '<span class="' + options.matchClass + '">' + typedText + '</span>' }
 					);
-					items[items.length] = token;
+					items[items.length] = {id:token.id, value:token.value};
 				}
 			}
-				
 			return items;
 		}
 			
@@ -445,6 +451,9 @@
 		
 			if ($currentResult) {
 				$input.val($currentResult.text());
+                if (idField !== null) {
+                    $('#'+idField).val($currentResult.attr("data-idValue"));
+                }
 				$results[id].hide();
 				
 				if (options.onSelect)

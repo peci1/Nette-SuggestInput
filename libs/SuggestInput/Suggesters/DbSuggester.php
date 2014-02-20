@@ -33,6 +33,11 @@ class DbSuggester extends \Nette\ComponentModel\Component implements ISuggester
     /** @var string Name of the column we fetch suggestions from  */
     protected $column = NULL;
 
+	/**
+	 * @var string Name of the column with ID (to put into the hidden id field of the form)
+	 */
+	protected $idColumn = NULL;
+
     /** @var string The WHERE clause (without WHERE), place %s in the place 
      * of the query string (do not type ' or " around it!) */
     protected $where = NULL;
@@ -56,11 +61,12 @@ class DbSuggester extends \Nette\ComponentModel\Component implements ISuggester
      *                      of the query string (do not type ' or " around it!)
      * @return void
      */
-    public function __construct(\Nette\Database\Context $connection = NULL, $table = NULL, $column = NULL, $where = NULL)
+    public function __construct(\Nette\Database\Context $connection = NULL, $table = NULL, $idColumn = NULL, $column = NULL, $where = NULL)
     {
 	$this->setConnection($connection);
         $this->setTable($table);
         $this->setColumn($column);
+        $this->setIdColumn($idColumn);
         $this->setWhere($where);
     }
 
@@ -83,9 +89,9 @@ class DbSuggester extends \Nette\ComponentModel\Component implements ISuggester
 	}
 
         //intentionally ==
-        if ($this->table == '' || $this->column == '' || $this->where == '') {
+        if ($this->table == '' || $this->column == '' || $this->where == '' || $this->idColumn == '') {
             throw new InvalidStateException(
-                'Neither $table, $column nor $where can be empty or NULL in' .
+                'Neither $table, $idColumn, $column nor $where can be empty or NULL in' .
                 __CLASS__ . '::' . __FUNCTION__);
         }
 
@@ -96,12 +102,12 @@ class DbSuggester extends \Nette\ComponentModel\Component implements ISuggester
             $query .= '%';
 
 	$matches = $this->connection->table($this->table)
-	    ->select($this->column)
+	    ->select($this->idColumn.', '.$this->column)
             ->where($this->where, $query);
 
         $this->matches = array();
         foreach ($matches as $match)
-            $this->matches[] = $match[$this->column];
+            $this->matches[] = array('id'=>$match[$this->idColumn], 'value'=>$match[$this->column]);
 
         return $this->matches;
     }
@@ -198,6 +204,22 @@ class DbSuggester extends \Nette\ComponentModel\Component implements ISuggester
         $this->table = $value;
         return $this;
     }
+
+	/**
+	 * @return string name of the ID column from table
+	 */
+	public function getIdColumn() {
+		return $this->idColumn;
+	}
+
+	/**
+	 * @param $value name of the ID column
+	 * @return $this
+	 */
+	public function setIdColumn($value) {
+		$this->idColumn = $value;
+		return $this;
+	}
 
     /**
      * Returns the name of the column we fetch suggestions from 

@@ -280,6 +280,39 @@ class SuggestInput extends \Nette\Forms\Controls\TextInput
 		return $form[$name] = new SuggestInput($label, $suggestLink, $suggester, $cols, $maxLength);
     }
 
+
+
+
+
+	/*
+	 * added by dobby
+	 */
+
+	/**
+	 * @var idField - Form control with ID of suggested DB value
+	 */
+	private $idField;
+
+	/**
+	 * @param $field - Form control, seee SuggesterTestPresenter.php for info
+	 * @return $this
+	 */
+	public function setIdField($field) {
+		$this->idField = $field;
+		$this->addJsOptions("idField", $this->idField->getControl()->attrs['id']);
+		return $this;
+	}
+
+	public function getIdField() {
+		return $this->idField;
+	}
+
+
+
+
+
+
+
 }
 
 /* ?> omitted intentionally */
