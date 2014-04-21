@@ -1,7 +1,7 @@
 {
-	"name": "peci1/Nette-SuggestInput",
+	"name": "peci1/suggestinput",
 	"description": "Dynamic suggester for text fields.",
-	"homepage": "https://github.com/peci1/Nette-SuggestInput",
+	"homepage": "https://github.com/peci1/suggestinput",
 	"type": "project",
 	"license": ["BSD-3-Clause"],
 	"authors": [
